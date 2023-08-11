@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Stock.Domain.Events.Exported";
+
+message ProductUpdatedEvent {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    double weight = 4;
+    double price = 5;
+    google.protobuf.Timestamp event_time = 50;
+}

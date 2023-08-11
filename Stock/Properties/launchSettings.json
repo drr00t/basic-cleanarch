@@ -1,0 +1,20 @@
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "EcommerceWebAPI": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:7777",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:7777",
+        "STOCK_MODEL_DATABASE": "Host=localhost;Database=postgres;Username=postgres;Password=postgres;Pooling=true;SearchPath=stock;",
+        "STOCK_BROKER_ENDPOINTS": "localhost:9092",
+        "SCHEMA_REGISTRY_ENDPOINTS": "http://localhost:8081",
+        "STOCK_TOPIC_PRODUCT_CHANGELOG": "warehouse_stock_products_changelog"
+      }
+    }
+  }
+}

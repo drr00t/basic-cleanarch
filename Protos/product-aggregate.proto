@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+import "product-event-created.proto";
+import "product-event-updated.proto";
+
+option csharp_namespace = "Stock.Domain.Events.Exported";
+
+message ProductAggregate {
+    string event_type = 1;
+    int64 event_processing_time_ms = 2;
+
+    oneof result {
+        ProductCreatedEvent product_created = 3;
+        ProductUpdatedEvent product_updated = 4;
+    }
+}

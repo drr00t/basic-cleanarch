@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+      <Protobuf Include="..\Protos\product-aggregate.proto">
+        <Link>Protos\product-aggregate.proto</Link>
+      </Protobuf>
+      <Protobuf Include="..\Protos\product-event-created.proto">
+        <Link>Protos\product-event-created.proto</Link>
+      </Protobuf>
+      <Protobuf Include="..\Protos\product-event-updated.proto">
+        <Link>Protos\product-event-updated.proto</Link>
+      </Protobuf>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Confluent.Kafka" Version="2.2.0" />
+      <PackageReference Include="Confluent.SchemaRegistry" Version="2.2.0" />
+      <PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="2.2.0" />
+      <PackageReference Include="DFlow" Version="0.8.2" />
+      <PackageReference Include="DFlow.Persistence" Version="0.8.2" />
+      <PackageReference Include="Google.Protobuf" Version="3.23.4" />
+      <PackageReference Include="Grpc.Tools" Version="2.56.2">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.9" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+      <PackageReference Include="Npgsql" Version="7.0.4" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NodaTime" Version="7.0.4" />
+      <PackageReference Include="Npgsql.Json.NET" Version="7.0.4" />
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    </ItemGroup>
+
+</Project>

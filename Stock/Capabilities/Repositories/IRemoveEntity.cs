@@ -5,11 +5,11 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 
-using Stock.Domain;
-using Stock.Domain.Entities;
+using FluentResults;
 
 namespace Stock.Capabilities.Repositories;
 
-public interface IProductRepository: IRepository<Product, ProductId>
+public interface IRemoveEntity<in TEntity>
 {
+    Task<Result> Remove(TEntity entity);
 }

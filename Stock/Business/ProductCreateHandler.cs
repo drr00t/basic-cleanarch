@@ -6,6 +6,7 @@
 
 using DFlow.Persistence;
 using DFlow.Validation;
+using FluentResults;
 using Stock.Capabilities;
 using Stock.Capabilities.Operations;
 using Stock.Capabilities.Repositories;
@@ -23,13 +24,7 @@ public sealed class ProductCreateHandler : ICommandHandler<ProductCreate, Guid>
         this._sessionDb = sessionDb;
     }
 
-    public Task<Result<Guid, IReadOnlyList<Failure>>> Execute(ProductCreate command)
-    {
-        return Execute(command, CancellationToken.None);
-    }
-
-    public async Task<Result<Guid, IReadOnlyList<Failure>>> 
-        Execute(ProductCreate command, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Execute(ProductCreate command, CancellationToken cancellationToken=default)
     {
         var product = Product.Create(ProductName.From(command.Name),
                                 ProductDescription.From(command.Description),
@@ -43,9 +38,9 @@ public sealed class ProductCreateHandler : ICommandHandler<ProductCreate, Guid>
             await this._sessionDb.Repository.Add(product);
             await this._sessionDb.SaveChangesAsync(cancellationToken);
             
-            return Succeded<Guid>.SucceedFor(product.Identity.Value);
+            return Result.Ok(product.Identity.Value);
         }
 
-        return Failed<Guid>.FailedFor(product.Failures);
+        return Result.Fail(product.Failures.Select( flr => new Error(flr.Message)));
     }
 }

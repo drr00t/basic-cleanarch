@@ -29,6 +29,7 @@
       <PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="2.2.0" />
       <PackageReference Include="DFlow" Version="0.8.2" />
       <PackageReference Include="DFlow.Persistence" Version="0.8.2" />
+      <PackageReference Include="FluentResults" Version="3.15.2" />
       <PackageReference Include="Google.Protobuf" Version="3.24.2" />
       <PackageReference Include="Grpc.Tools" Version="2.57.0">
         <PrivateAssets>all</PrivateAssets>

@@ -5,11 +5,9 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 
-using Stock.Domain;
-using Stock.Domain.Entities;
-
 namespace Stock.Capabilities.Repositories;
 
-public interface IProductRepository: IRepository<Product, ProductId>
+public interface IQueryEntities<TEntity>
 {
+    Task<IReadOnlyList<TEntity>> GetAllBy(Predicate<TEntity> filter, CancellationToken cancellationToken = default(CancellationToken));
 }

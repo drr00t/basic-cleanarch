@@ -7,6 +7,7 @@
 using Confluent.Kafka;
 using Confluent.SchemaRegistry;
 using DFlow.Validation;
+using FluentResults;
 using Stock.Capabilities;
 using Stock.Capabilities.Messaging;
 using Stock.Capabilities.Supporting;
@@ -29,31 +30,31 @@ public abstract class BaseMessageProducer<TValue>: IMessageProducer<TValue> wher
         var configTopicPublishing = config.FromEnvironment(ecommerceTopicProduct);
         var schemaRegistryEndpoints = config.FromEnvironment(SchemaRegistryEndpoints);
 
-        if (configBrokers.IsSucceded == false)
+        if (configBrokers.IsFailed)
         {
             throw new ArgumentException(EcommerceBrokerEndpoints);
         }
         
-        if (!configTopicPublishing.IsSucceded || string.IsNullOrEmpty(configTopicPublishing.Succeded))
+        if (!configTopicPublishing.IsSuccess || string.IsNullOrEmpty(configTopicPublishing.Value))
         {
             throw new ArgumentException(ecommerceTopicProduct);
         }
         
-        if (!schemaRegistryEndpoints.IsSucceded || string.IsNullOrEmpty(schemaRegistryEndpoints.Succeded))
+        if (!schemaRegistryEndpoints.IsSuccess || string.IsNullOrEmpty(schemaRegistryEndpoints.Value))
         {
             throw new ArgumentException(SchemaRegistryEndpoints);
         }
         
-        TopicDestination = configTopicPublishing.Succeded;
+        TopicDestination = configTopicPublishing.Value;
         
         SchemaRegistryConfig = new SchemaRegistryConfig()
         {
-            Url = schemaRegistryEndpoints.Succeded
+            Url = schemaRegistryEndpoints.Value
         };
         
         ProducerConfig = new ProducerConfig
         {
-            BootstrapServers = configBrokers.Succeded,
+            BootstrapServers = configBrokers.Value,
             RequestTimeoutMs = 4000,
             RetryBackoffMs = 100, // número de tentativas de entrega
             MessageTimeoutMs = 5000, // timmeout para confirmação de entrega
@@ -66,5 +67,5 @@ public abstract class BaseMessageProducer<TValue>: IMessageProducer<TValue> wher
         };
     }
     
-    public abstract Task<Result<bool, IReadOnlyList<Failure>>> Produce(TValue change, CancellationToken cancellationToken);
+    public abstract Task<Result> Produce(TValue change, CancellationToken cancellationToken=default);
 }

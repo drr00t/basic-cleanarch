@@ -5,11 +5,11 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 
-using DFlow.Validation;
+using FluentResults;
 
 namespace Stock.Capabilities.Operations;
 
 public interface ICommandHandler<in TCommand,TResult>
 {
-    public Task<Result<TResult, IReadOnlyList<Failure>>> Execute(TCommand command, CancellationToken cancellationToken= default);
+    public Task<Result<TResult>> Execute(TCommand command, CancellationToken cancellationToken= default);
 }

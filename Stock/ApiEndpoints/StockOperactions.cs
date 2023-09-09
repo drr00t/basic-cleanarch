@@ -22,12 +22,12 @@ public static class StockOperactions
         {
             var result = await handler.Execute(command);
 
-            if (result.IsSucceded == false)
+            if (result.IsFailed)
             {
-                return Results.BadRequest(result.Failed);
+                return Results.BadRequest(result.Errors);
             }
 
-            return Results.Ok(result);
+            return Results.Ok(result.Value);
         });
 
         app.MapPut("/products/{productId:guid}", async ([FromRoute]Guid productId, 
@@ -42,12 +42,12 @@ public static class StockOperactions
                 command.Price,
                 command.Quantity));
         
-            if (result.IsSucceded == false)
+            if (result.IsFailed)
             {
-                return Results.BadRequest(result.Failed);
+                return Results.BadRequest(result.Errors);
             }
         
-            return Results.Ok(result.Succeded);
+            return Results.Ok(result.Value);
         });
     }
 }

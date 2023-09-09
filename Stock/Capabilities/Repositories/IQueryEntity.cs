@@ -5,11 +5,12 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 
-using Stock.Domain;
-using Stock.Domain.Entities;
+using DFlow.BusinessObjects;
+using FluentResults;
 
 namespace Stock.Capabilities.Repositories;
 
-public interface IProductRepository: IRepository<Product, ProductId>
+public interface IQueryEntity<TEntity, in TIdentity>
 {
+    Task<Result<TEntity>> GetBy(TIdentity identity, CancellationToken cancellationToken = default(CancellationToken));
 }

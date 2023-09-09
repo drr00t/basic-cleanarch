@@ -6,6 +6,8 @@
 
 using DFlow.Persistence;
 using DFlow.Validation;
+using FluentResults;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Stock.Capabilities;
 using Stock.Capabilities.Operations;
 using Stock.Capabilities.Repositories;
@@ -23,34 +25,30 @@ public sealed class ProductUpdateHandler : ICommandHandler<ProductUpdate, Guid>
         this._sessionDb = sessionDb;
     }
 
-    public Task<Result<Guid, IReadOnlyList<Failure>>> Execute(ProductUpdate command)
+    public async Task<Result<Guid>> Execute(ProductUpdate command
+        , CancellationToken cancellationToken = default)
     {
-        return Execute(command, CancellationToken.None);
-    }
+        var result = await this._sessionDb.Repository
+            .GetBy(ProductId.From(command.Id),cancellationToken);
 
-    public async Task<Result<Guid, IReadOnlyList<Failure>>> Execute(ProductUpdate command
-        , CancellationToken cancellationToken)
-    {
-        var product = await this._sessionDb.Repository.GetById(ProductId.From(command.Id),cancellationToken);
+        if (result.IsFailed)
+        {
+            return Result.Fail(result.Value.Failures.Select( flr => new Error(flr.Message)));
+        }
         
-        var updatedPproduct = Product.ReCreate(product);
-        
-        
-        updatedPproduct.Update( ProductName.From(command.Name),
+        result.Value.Update( ProductName.From(command.Name),
             ProductDescription.From(command.Description),
             ProductWeight.From(command.Weight)
             , ProductPrice.From(command.Price)
             , ProductQuantity.From(command.Quantity));
 
-        if (updatedPproduct.IsValid)
+        if (result.Value.IsValid)
         {
-            return Succeded<Guid>.SucceedFor(updatedPproduct.Identity.Value);    
+            await this._sessionDb.Repository.Add(result.Value);
+            await this._sessionDb.SaveChangesAsync(cancellationToken);
+            return Result.Ok(result.Value.Identity.Value);    
         }
 
-        await this._sessionDb.Repository.Add(updatedPproduct);
-        await this._sessionDb.SaveChangesAsync(cancellationToken);
-        
-        return Failed<Guid>.FailedFor(updatedPproduct.Failures);
-        
+        return Result.Fail(result.Value.Failures.Select( flr => new Error(flr.Message)));
     }
 }

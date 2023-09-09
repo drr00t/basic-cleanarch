@@ -5,22 +5,21 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 
-using DFlow.Validation;
-using Stock.Capabilities;
+using FluentResults;
 using Stock.Capabilities.Supporting;
 
 namespace Stock.Drivers.Supporting;
 
 public class Config: IConfig
 {
-    public Result<string,  IReadOnlyList<Failure>> FromEnvironment(string configKey)
+    public Result<string> FromEnvironment(string configKey)
     {
         var result =  Environment.GetEnvironmentVariable(configKey);
 
         if (!string.IsNullOrEmpty(result))
         {
             string value = result;
-            return Succeded<string>.SucceedFor(value);
+            return Result.Ok(value);
         }
 
         throw new ArgumentException(configKey);

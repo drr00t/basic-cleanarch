@@ -23,12 +23,12 @@ public sealed class StockDbContext : DbContext
     {
         var result = config.FromEnvironment(StockModelDatabase);
 
-        if (!result.IsSucceded)
+        if (result.IsFailed)
         {
             throw new ArgumentException(StockModelDatabase);
         }
 
-        _connectionString = result.Succeded;
+        _connectionString = result.Value;
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

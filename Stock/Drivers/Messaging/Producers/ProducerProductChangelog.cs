@@ -9,6 +9,7 @@ using Confluent.Kafka;
 using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
 using DFlow.Validation;
+using FluentResults;
 using Microsoft.Extensions.Logging;
 using Stock.Capabilities;
 using Stock.Capabilities.Persistence.States;
@@ -29,7 +30,7 @@ public class ProducerProductChangelog: BaseMessageProducer<AggregateState>
         _logger = logger;
     }
     
-    public override async Task<Result<bool, IReadOnlyList<Failure>>> Produce(AggregateState change, CancellationToken cancellationToken)
+    public override async Task<Result> Produce(AggregateState change, CancellationToken cancellationToken = default)
     {
         var outboxMessage = MessageFrom(change);
         var ok = false;
@@ -48,10 +49,10 @@ public class ProducerProductChangelog: BaseMessageProducer<AggregateState>
         catch (KafkaException ex)
         {
             _logger.LogError("Erro na publicação da mensagem ",ex);
-            throw;
+            return Result.Fail(ex.Error.Reason);
         }
         
-        return Succeded<bool>.SucceedFor(ok);
+        return Result.Ok();
     }
     
     private Message<string, ProductAggregate> MessageFrom(AggregateState change)
@@ -74,5 +75,4 @@ public class ProducerProductChangelog: BaseMessageProducer<AggregateState>
             Timestamp = eventProcessingTimeMs
         };        
     }
-
 }

@@ -5,11 +5,11 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 
-using DFlow.Validation;
+using FluentResults;
 
 namespace Stock.Capabilities.Supporting;
 
 public interface IConfig
 {
-    Result<string,  IReadOnlyList<Failure>> FromEnvironment(string configKey);
+    Result<string> FromEnvironment(string configKey);
 }

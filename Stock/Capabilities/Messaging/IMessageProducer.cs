@@ -5,11 +5,11 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 
-using DFlow.Validation;
+using FluentResults;
 
 namespace Stock.Capabilities.Messaging;
 
 public interface IMessageProducer<in TValue> where TValue:class
 {
-    Task<Result<bool, IReadOnlyList<Failure>>> Produce(TValue change, CancellationToken cancellationToken = default);
+    Task<Result> Produce(TValue change, CancellationToken cancellationToken = default);
 }
